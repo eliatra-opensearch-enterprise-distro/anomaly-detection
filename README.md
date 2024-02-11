@@ -1,54 +1,21 @@
-[![AD Test](https://github.com/opensearch-project/anomaly-detection/workflows/Build%20and%20Test%20Anomaly%20detection/badge.svg)](https://github.com/opensearch-project/anomaly-detection/actions?query=workflow%3A%22Build+and+Test+Anomaly+detection%22+branch%3A%22main%22)
-[![codecov](https://codecov.io/gh/opensearch-project/anomaly-detection/branch/main/graph/badge.svg?flag=plugin)](https://codecov.io/gh/opensearch-project/anomaly-detection)
-[![Documentation](https://img.shields.io/badge/doc-reference-blue)](https://opensearch.org/docs/monitoring-plugins/ad/index/)
-[![Forum](https://img.shields.io/badge/chat-on%20forums-blue)](https://forum.opensearch.org/)
-![PRs welcome!](https://img.shields.io/badge/PRs-welcome!-success)
+# Eliatra OpenSearch Enterprise Distro (EOED) - Long Term Support for OpenSearch
 
-<img src="https://opensearch.org/assets/img/opensearch-logo-themed.svg" height="64px">
+This repository is part of the Eliatra OpenSearch Enterprise Distro (EOED).
 
-<!-- TOC -->
+## Questions?
 
-- [OpenSearch Anomaly Detection](#opensearch-anomaly-detection)
-- [Documentation](#documentation)
-- [Contributing](#contributing)
-- [Code of Conduct](#code-of-conduct)
-- [Security](#security)
-- [License](#license)
-- [Copyright](#copyright)
-
-<!-- /TOC -->
-
-## OpenSearch Anomaly Detection
-
-The OpenSearch Anomaly Detection plugin enables you to leverage Machine Learning based algorithms to automatically detect anomalies as your log data is ingested. Combined with [OpenSearch Alerting](https://github.com/opensearch-project/alerting), you can monitor your data in near real time and automatically send alert notifications . With an intuitive OpenSearch Dashboards interface, and a powerful API, it is easy to set up, tune, and monitor your anomaly detectors.
-
-Anomaly detection is using the [Random Cut Forest (RCF) algorithm](https://github.com/aws/random-cut-forest-by-aws) for detecting anomalous data points.
-
-Anomaly detections run a scheduled job using [job-scheduler](https://github.com/opensearch-project/job-scheduler).
-
-You can use this plugin with the same version of the [OpenSearch Alerting Plugin](https://github.com/opensearch-project/alerting) to create monitors based on created anomaly detectors. A scheduled monitor run checks the anomaly detection results regularly, and collects anomalies to trigger alerts based on custom trigger conditions.
-  
-## Documentation
-
-Please see [our documentation](https://opensearch.org/docs/monitoring-plugins/ad/index/).
-
-
-## Contributing
-
-See [developer guide](DEVELOPER_GUIDE.md) and [how to contribute to this project](CONTRIBUTING.md).
-
-## Code of Conduct
-
-This project has adopted the [Amazon Open Source Code of Conduct](CODE_OF_CONDUCT.md). For more information see the [Code of Conduct FAQ](https://aws.github.io/code-of-conduct-faq), or contact [opensource-codeofconduct@amazon.com](mailto:opensource-codeofconduct@amazon.com) with any additional questions or comments.
-
-## Security
-
-If you discover a potential security issue in this project we ask that you notify AWS/Amazon Security via our [vulnerability reporting page](http://aws.amazon.com/security/vulnerability-reporting/). Please do **not** create a public GitHub issue.
+Please refer to https://eliatra.com/opensearch-enterprise-distro or ask your questions in our [Forum](https://forum.eliatra.com).
 
 ## License
 
-This project is licensed under the [Apache v2.0 License](LICENSE.txt).
+This project is licensed under a [commercial License](LICENSE.txt).
 
 ## Copyright
 
-Copyright OpenSearch Contributors. See [NOTICE](NOTICE.txt) for details.
+Copyright Eliatra. See [NOTICE](NOTICE.txt) for details.
+
+## Trademark
+
+OpenSearch is a registered trademark of Amazon Web Services.
+
+OpenSearch includes certain Apache-licensed Elasticsearch code from Elasticsearch B.V. and other source code. Elasticsearch B.V. is not the source of that other source code. ELASTICSEARCH is a registered trademark of Elasticsearch B.V.
