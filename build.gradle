@@ -18,20 +18,36 @@ buildscript {
         opensearch_group = "org.opensearch"
         isSnapshot = "true" == System.getProperty("build.snapshot", "true")
         opensearch_version = System.getProperty("opensearch.version", "1.3.14-SNAPSHOT")
-        if (isSnapshot) {
-            plugin_version = opensearch_version.substring(0, opensearch_version.indexOf("-"))
-        } else {
-            plugin_version = opensearch_version
-        }
+
+        // when executed for integration testing we do not have a build qualifier
+        buildVersionQualifier = System.getProperty("build.version_qualifier", "")
+
         // 1.2.0 -> 1.2.0.0, and 1.2.0-SNAPSHOT -> 1.2.0.0-SNAPSHOT
-        opensearch_build = opensearch_version.replaceAll(/(\.\d+)([^\d]*)$/, '$1.0$2')
+        //opensearch_build = opensearch_version.replaceAll(/(\.\d+)([^\d]*)$/, '$1.0$2')
+        
+        version_tokens = opensearch_version.tokenize('-')
+        opensearch_build = version_tokens[0] + '.0'
+        if (buildVersionQualifier) {
+            opensearch_build += "-${buildVersionQualifier}"
+        }
+        if (isSnapshot) {
+            opensearch_build += "-SNAPSHOT"
+        }
+        
+        
         common_utils_version = System.getProperty("common_utils.version", opensearch_build)
         job_scheduler_version_snapshot = System.getProperty("job_scheduler.version", opensearch_build)
         js_resource_folder = "src/test/resources/job-scheduler"
-        job_scheduler_build_download = 'https://ci.opensearch.org/ci/dbc/distribution-build-opensearch/' + plugin_version +
-                '/latest/linux/x64/tar/builds/opensearch/plugins/opensearch-job-scheduler-' + plugin_version + '.0.zip'
-        anomaly_detection_build_download = 'https://ci.opensearch.org/ci/dbc/distribution-build-opensearch/' + plugin_version +
-                '/latest/linux/x64/tar/builds/opensearch/plugins/opensearch-anomaly-detection-' + plugin_version + '.0.zip'
+
+        opensearch_no_snapshot = opensearch_version.replace("-SNAPSHOT","")
+        plugin_tokens = opensearch_no_snapshot.tokenize('-')
+        plugin_no_snapshot = plugin_tokens[0] + '.0-' + plugin_tokens[1]
+
+        job_scheduler_build_download = 'https://maven.eliatra.com/artifactory/eliatra-opensearch-enterprise-distro-staging/' + opensearch_no_snapshot +
+                '/opensearch/x64/linux/tar/plugins/opensearch-job-scheduler-' + plugin_no_snapshot + '.zip'
+        anomaly_detection_build_download = 'https://maven.eliatra.com/artifactory/eliatra-opensearch-enterprise-distro-staging/' + opensearch_no_snapshot +
+                '/opensearch/x64/linux/tar/plugins/opensearch-anomaly-detection-' + plugin_no_snapshot + '.zip'
+        
         bwcOpenSearchADDownload = 'https://ci.opensearch.org/ci/dbc/bundle-build/1.1.0/20210930/linux/x64/builds/opensearch/plugins/' +
                 'opensearch-anomaly-detection-1.1.0.0.zip'
         bwcOpenSearchJSDownload = 'https://ci.opensearch.org/ci/dbc/bundle-build/1.1.0/20210930/linux/x64/builds/opensearch/plugins/' +
@@ -86,17 +102,10 @@ apply plugin: 'base'
 apply plugin: 'jacoco'
 apply plugin: 'eclipse'
 
-ext {
-    isSnapshot = "true" == System.getProperty("build.snapshot", "true")
-}
-
 allprojects {
     group = 'org.opensearch'
 
-    version = opensearch_version - "-SNAPSHOT" + ".0"
-    if (isSnapshot) {
-        version += "-SNAPSHOT"
-    }
+    version = "${opensearch_build}"
 
     plugins.withId('java') {
         sourceCompatibility = targetCompatibility = "1.8"
