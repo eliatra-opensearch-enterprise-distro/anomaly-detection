@@ -19,26 +19,45 @@ buildscript {
         opensearch_group = "org.opensearch"
         isSnapshot = "true" == System.getProperty("build.snapshot", "true")
         opensearch_version = System.getProperty("opensearch.version", "2.11.1-SNAPSHOT")
+        
+        // when executed for integration testing we do not have a build qualifier
         buildVersionQualifier = System.getProperty("build.version_qualifier", "")
+
         // 2.3.0-SNAPSHOT -> 2.3.0.0-SNAPSHOT
         version_tokens = opensearch_version.tokenize('-')
         opensearch_build = version_tokens[0] + '.0'
-        plugin_no_snapshot = opensearch_build
+
         if (buildVersionQualifier) {
             opensearch_build += "-${buildVersionQualifier}"
-            plugin_no_snapshot += "-${buildVersionQualifier}"
         }
+
         if (isSnapshot) {
             opensearch_build += "-SNAPSHOT"
         }
+
         opensearch_no_snapshot = opensearch_version.replace("-SNAPSHOT","")
         js_resource_folder = "src/test/resources/job-scheduler"
         common_utils_version = System.getProperty("common_utils.version", opensearch_build)
         job_scheduler_version = System.getProperty("job_scheduler.version", opensearch_build)
-        job_scheduler_build_download = 'https://ci.opensearch.org/ci/dbc/distribution-build-opensearch/' + opensearch_no_snapshot +
-                '/latest/linux/x64/tar/builds/opensearch/plugins/opensearch-job-scheduler-' + plugin_no_snapshot + '.zip'
-        anomaly_detection_build_download = 'https://ci.opensearch.org/ci/dbc/distribution-build-opensearch/' + opensearch_no_snapshot +
-                '/latest/linux/x64/tar/builds/opensearch/plugins/opensearch-anomaly-detection-' + plugin_no_snapshot + '.zip'
+
+        //https://ci.opensearch.org/ci/dbc/distribution-build-opensearch/2.11.1-ee1/latest/linux/x64/tar/builds/opensearch/plugins/opensearch-job-scheduler-2.11.1.0.zip
+
+        //opensearch_no_snapshot -> 2.11.1-ee1
+        //plugin_no_snapshot -> 2.11.1.0
+
+        //https://maven.eliatra.com/artifactory/eliatra-opensearch-enterprise-distro-staging/2.11.1-ee1/opensearch/x64/linux/tar/plugins/opensearch-job-scheduler-2.11.1.0-ee1.zip"
+
+        plugin_tokens = opensearch_no_snapshot.tokenize('-')
+        plugin_no_snapshot = plugin_tokens[0] + '.0-' + plugin_tokens[1]
+
+        job_scheduler_build_download = 'https://maven.eliatra.com/artifactory/eliatra-opensearch-enterprise-distro-staging/' + opensearch_no_snapshot +
+                '/opensearch/x64/linux/tar/plugins/opensearch-job-scheduler-' + plugin_no_snapshot + '.zip'
+        
+        
+        anomaly_detection_build_download = 'https://maven.eliatra.com/artifactory/eliatra-opensearch-enterprise-distro-staging/' + opensearch_no_snapshot +
+                '/opensearch/x64/linux/tar/plugins/opensearch-anomaly-detection-' + plugin_no_snapshot + '.zip'
+        
+        
         bwcOpenSearchADDownload = 'https://ci.opensearch.org/ci/dbc/distribution-build-opensearch/1.3.2/latest/linux/x64/tar/builds/opensearch/plugins/opensearch-anomaly-detection-1.3.2.0.zip'
         bwcOpenSearchJSDownload = 'https://ci.opensearch.org/ci/dbc/distribution-build-opensearch/1.3.2/latest/linux/x64/tar/builds/opensearch/plugins/opensearch-job-scheduler-1.3.2.0.zip'
 
@@ -108,11 +127,6 @@ apply plugin: 'base'
 apply plugin: 'jacoco'
 apply plugin: 'eclipse'
 apply plugin: 'opensearch.pluginzip'
-
-ext {
-    isSnapshot = "true" == System.getProperty("build.snapshot", "true")
-    buildVersionQualifier = System.getProperty("build.version_qualifier")
-}
 
 allprojects {
     group = 'org.opensearch'
@@ -817,14 +831,14 @@ afterEvaluate {
         dirMode 0755
 
         requires('opensearch', versions.opensearch, EQUAL)
-        packager = 'Amazon'
-        vendor = 'Amazon'
+        packager = 'Eliatra'
+        vendor = 'Eliatra'
         os = 'LINUX'
         prefix '/usr'
 
         license 'ASL-2.0'
-        maintainer 'OpenSearch <opensearch@amazon.com>'
-        url 'https://opensearch.org/downloads.html'
+        maintainer 'EOED <info@eliatra.com>'
+        url 'https://eliatra.com'
         summary '''
          Anomaly Detection plugin for OpenSearch.
          Reference documentation can be found at https://opensearch.org/docs/monitoring-plugins/ad/index/.
