@@ -23,41 +23,29 @@ buildscript {
         // 3.0.0-SNAPSHOT -> 3.0.0.0-SNAPSHOT
         version_tokens = opensearch_version.tokenize('-')
         opensearch_build = version_tokens[0] + '.0'
-
+        plugin_no_snapshot = opensearch_build
         if (buildVersionQualifier) {
             opensearch_build += "-${buildVersionQualifier}"
+            plugin_no_snapshot += "-${buildVersionQualifier}"
         }
-
         if (isSnapshot) {
             opensearch_build += "-SNAPSHOT"
         }
-
         opensearch_no_snapshot = opensearch_version.replace("-SNAPSHOT","")
         js_resource_folder = "src/test/resources/job-scheduler"
         common_utils_version = System.getProperty("common_utils.version", opensearch_build)
         job_scheduler_version = System.getProperty("job_scheduler.version", opensearch_build)
-
-        //https://ci.opensearch.org/ci/dbc/distribution-build-opensearch/2.11.1-ee1/latest/linux/x64/tar/builds/opensearch/plugins/opensearch-job-scheduler-2.11.1.0.zip
-
-        //opensearch_no_snapshot -> 2.11.1-ee1
-        //plugin_no_snapshot -> 2.11.1.0
-
-        //https://maven.eliatra.com/artifactory/eliatra-opensearch-enterprise-distro-staging/2.11.1-ee1/opensearch/x64/linux/tar/plugins/opensearch-job-scheduler-2.11.1.0-ee1.zip"
-
-        plugin_tokens = opensearch_no_snapshot.tokenize('-')
-        plugin_no_snapshot = plugin_tokens[0] + '.0-' + plugin_tokens[1]
-
-        job_scheduler_build_download = 'https://maven.eliatra.com/artifactory/eliatra-opensearch-enterprise-distro-staging/' + opensearch_no_snapshot +
-                '/opensearch/x64/linux/tar/plugins/opensearch-job-scheduler-' + plugin_no_snapshot + '.zip'
-        
-        
-        anomaly_detection_build_download = 'https://maven.eliatra.com/artifactory/eliatra-opensearch-enterprise-distro-staging/' + opensearch_no_snapshot +
-                '/opensearch/x64/linux/tar/plugins/opensearch-anomaly-detection-' + plugin_no_snapshot + '.zip'
-        
-        
-        bwcOpenSearchADDownload = 'https://ci.opensearch.org/ci/dbc/distribution-build-opensearch/1.3.2/latest/linux/x64/tar/builds/opensearch/plugins/opensearch-anomaly-detection-1.3.2.0.zip'
-        bwcOpenSearchJSDownload = 'https://ci.opensearch.org/ci/dbc/distribution-build-opensearch/1.3.2/latest/linux/x64/tar/builds/opensearch/plugins/opensearch-job-scheduler-1.3.2.0.zip'
-
+        bwcVersionShort = "1.3.2"
+        bwcVersion = bwcVersionShort + ".0"
+        bwcOpenSearchADDownload = 'https://ci.opensearch.org/ci/dbc/distribution-build-opensearch/' + bwcVersionShort + '/latest/linux/x64/tar/builds/' +
+                'opensearch/plugins/opensearch-anomaly-detection-' + bwcVersion + '.zip'
+        bwcOpenSearchJSDownload = 'https://ci.opensearch.org/ci/dbc/distribution-build-opensearch/' + bwcVersionShort + '/latest/linux/x64/tar/builds/' +
+                'opensearch/plugins/opensearch-job-scheduler-' + bwcVersion + '.zip'
+        baseName = "adBwcCluster"
+        bwcFilePath = "src/test/resources/org/opensearch/ad/bwc/"
+        bwcJobSchedulerPath = bwcFilePath + "job-scheduler/"
+        bwcAnomalyDetectionPath = bwcFilePath + "anomaly-detection/"
+        jacksonVersion = "2.18.2"
         // gradle build won't print logs during test by default unless there is a failure.
         // It is useful to record intermediately information like prediction precision and recall.
         // This option turn on log printing during tests. 
